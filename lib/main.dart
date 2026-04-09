@@ -30,7 +30,7 @@ void main() async {
       title: "HM Tracker",
       initialBinding: InitialBinding(),
       // 3. Use the boolean check here
-      initialRoute: isLoggedIn ? Routes.HOME : AppPages.INITIAL,
+      initialRoute: isLoggedIn ? Routes.MAIN : AppPages.INITIAL,
       getPages: AppPages.routes,
     ),
   );

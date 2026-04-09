@@ -1,73 +1,60 @@
 import 'package:flutter/material.dart';
-import 'package:hm_tracker/constants/color.dart';
 import 'package:get/get.dart';
+import 'package:hm_tracker/app/modules/expense/controllers/expense_controller.dart';
+import 'package:hm_tracker/app/modules/expense/views/expense_view.dart';
+import 'package:hm_tracker/app/modules/home/controllers/home_controller.dart';
+import 'package:hm_tracker/app/modules/home/views/home_view.dart';
+import 'package:hm_tracker/app/modules/income/controllers/income_controller.dart';
+import 'package:hm_tracker/app/modules/income/views/income_view.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
+import 'package:hm_tracker/constants/color.dart';
 
-class CustomBottomNavbar extends StatefulWidget {
-  const CustomBottomNavbar({super.key, required this.currentIndex});
+// Import halaman-halaman kamu di sini
+// import 'package:hm_tracker/screens/home_screen.dart';
+// import 'package:hm_tracker/screens/income_screen.dart';
+// import 'package:hm_tracker/screens/expense_screen.dart';
 
-  final int currentIndex;
+class CustomBottomNavbar extends StatelessWidget {
+  CustomBottomNavbar({super.key});
 
-  @override
-  State<CustomBottomNavbar> createState() => _CustomBottomNavbarState();
-}
-
-class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
-  int selectedIndex = 0;
-  onTapped(int index) {
-    setState(() {
-      selectedIndex = widget.currentIndex;
-    });
-  }
+  final incomeController = Get.put(IncomeController());
+  final expenseController = Get.put(ExpenseController());
+  final homeController = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      backgroundColor: appWhite,
-      showSelectedLabels: true,
-      currentIndex: selectedIndex,
-      showUnselectedLabels: true,
-      fixedColor: Colors.black,
-      unselectedItemColor: Colors.grey,
-      elevation: 10,
-      items: [
-        BottomNavigationBarItem(
-          icon: IconButton(
-            onPressed: () {
-              onTapped(0);
-              Get.offNamed('/home');
-            },
-            icon: Icon(
-              Icons.home,
-              color: widget.currentIndex == 0 ? primary : Colors.black,
-            ),
+    return PersistentTabView(
+      tabs: [
+        PersistentTabConfig(
+          screen: HomeView(),
+          item: ItemConfig(
+            icon: const Icon(Icons.home),
+            title: "Home",
+            activeForegroundColor: primary,
+            inactiveForegroundColor: Colors.grey,
           ),
-          label: 'Home',
         ),
-        BottomNavigationBarItem(
-          icon: IconButton(
-            onPressed: () {
-              onTapped(1);
-              Get.offNamed('/income');
-            },
-            icon: Icon(
-              Icons.south_west,
-              color: widget.currentIndex == 1 ? primary : Colors.black,
-            ),
+        PersistentTabConfig(
+          screen: IncomeView(), // Ganti dengan IncomeScreen()
+          item: ItemConfig(
+            icon: const Icon(Icons.south_west),
+            title: "Pemasukan",
+            activeForegroundColor: primary,
+            inactiveForegroundColor: Colors.grey,
           ),
-          label: 'Pemasukan',
         ),
-        BottomNavigationBarItem(
-          icon: IconButton(
-            onPressed: () {
-              onTapped(2);
-              Get.offNamed('/favorite');
-            },
-            icon: const Icon(Icons.favorite),
-            color: widget.currentIndex == 2 ? primary : Colors.black,
+        PersistentTabConfig(
+          screen: ExpenseView(), // Ganti dengan ExpenseScreen()
+          item: ItemConfig(
+            icon: const Icon(Icons.north_east),
+            title: "Pengeluaran",
+            activeForegroundColor: primary,
+            inactiveForegroundColor: Colors.grey,
           ),
-          label: 'Favorit',
         ),
       ],
+      navBarBuilder: (navBarConfig) =>
+          Style2BottomNavBar(navBarConfig: navBarConfig),
     );
   }
 }

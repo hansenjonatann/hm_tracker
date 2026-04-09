@@ -1,5 +1,8 @@
 import 'package:get/get.dart';
+import 'package:hm_tracker/app/widget/main_page.dart';
 
+import '../modules/expense/bindings/expense_binding.dart';
+import '../modules/expense/views/expense_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/income/bindings/income_binding.dart';
@@ -32,6 +35,16 @@ class AppPages {
       name: _Paths.INCOME,
       page: () => IncomeView(),
       binding: IncomeBinding(),
+    ),
+    GetPage(
+      name: _Paths.EXPENSE,
+      page: () => ExpenseView(),
+      binding: ExpenseBinding(),
+    ),
+    GetPage(
+      name: _Paths.MAIN,
+      page: () => const MainPage(), // Ini widget yang pakai PersistentTabView
+      bindings: [HomeBinding(), IncomeBinding(), ExpenseBinding()],
     ),
   ];
 }

@@ -4,19 +4,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hm_tracker/constants/color.dart';
 import 'package:hm_tracker/utils/format-rupiah.dart';
 import 'package:intl/intl.dart';
-import '../controllers/income_controller.dart';
+import '../controllers/expense_controller.dart';
 
-class IncomeView extends GetView<IncomeController> {
-  IncomeView({super.key});
-
-  final incomeC = Get.find<IncomeController>();
+class ExpenseView extends GetView<ExpenseController> {
+  ExpenseView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: primary,
       body: Obx(() {
-        if (incomeC.isLoading.value) {
+        if (controller.isLoading.value) {
           return const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -36,7 +34,7 @@ class IncomeView extends GetView<IncomeController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "Pemasukan",
+                  "Pengeluaran",
                   style: TextStyle(
                     fontSize: 24.0,
                     color: appWhite,
@@ -50,7 +48,7 @@ class IncomeView extends GetView<IncomeController> {
 
                 const SizedBox(height: 20),
                 const Text(
-                  "Daftar Pemasukan",
+                  "Daftar Pengeluaran",
                   style: TextStyle(
                     color: appWhite,
                     fontWeight: FontWeight.bold,
@@ -61,7 +59,7 @@ class IncomeView extends GetView<IncomeController> {
                 Expanded(
                   child: Obx(() {
                     // Pastikan Obx membungkus list dengan benar
-                    if (incomeC.incomes.isEmpty) {
+                    if (controller.expenses.isEmpty) {
                       return const Center(
                         child: Text(
                           "Belum ada data",
@@ -71,12 +69,12 @@ class IncomeView extends GetView<IncomeController> {
                     }
 
                     return ListView.builder(
-                      itemCount: incomeC
-                          .incomes
+                      itemCount: controller
+                          .expenses
                           .length, // Gunakan langsung tanpa .value
                       physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
-                        final income = incomeC.incomes[index];
+                        final income = controller.expenses[index];
 
                         return _buildTransactionItem(
                           id: income.id ?? '',
@@ -116,11 +114,11 @@ class IncomeView extends GetView<IncomeController> {
       child: ListTile(
         contentPadding: EdgeInsets.zero,
         title: const Text(
-          "Total Pemasukan",
+          "Total Pengeluaran",
           style: TextStyle(color: Colors.white70, fontSize: 14),
         ),
         subtitle: Text(
-          formatRupiah(incomeC.totalIncome.value),
+          formatRupiah(controller.totalExpense.value),
           style: const TextStyle(
             fontSize: 28.0,
             color: Colors.white,
@@ -149,7 +147,7 @@ class IncomeView extends GetView<IncomeController> {
         // Menampilkan dialog konfirmasi sebelum benar-benar menghapus
         return await Get.defaultDialog(
           title: "Hapus Data",
-          middleText: "Apakah kamu yakin ingin menghapus pemasukan ini?",
+          middleText: "Apakah kamu yakin ingin menghapus pengeluaran ini?",
           backgroundColor: primary,
           titleStyle: const TextStyle(color: Colors.white),
           middleTextStyle: const TextStyle(color: Colors.white70),
@@ -159,7 +157,7 @@ class IncomeView extends GetView<IncomeController> {
           buttonColor: Colors.redAccent,
           onConfirm: () {
             // incomeC.deleteIncome(id); // Panggil fungsi delete di controller
-            controller.deleteIncome(id);
+            controller.deleteExpense(id);
             Get.back(result: true); // Menutup dialog dan mengizinkan dismiss
           },
           onCancel: () => Get.back(result: false),
@@ -270,10 +268,10 @@ class IncomeView extends GetView<IncomeController> {
 
   void _showAddBottomSheet() {
     // Reset field sebelum tampil
-    incomeC.descC.clear();
-    incomeC.amountC.clear();
-    incomeC.selectedCategoryId.value = "";
-    incomeC.selectedDate.value = DateTime.now();
+    controller.descC.clear();
+    controller.amountC.clear();
+    controller.selectedCategoryId.value = "";
+    controller.selectedDate.value = DateTime.now();
 
     Get.bottomSheet(
       Container(
@@ -323,11 +321,11 @@ class IncomeView extends GetView<IncomeController> {
                   onTap: () async {
                     DateTime? picked = await showDatePicker(
                       context: Get.context!,
-                      initialDate: incomeC.selectedDate.value,
+                      initialDate: controller.selectedDate.value,
                       firstDate: DateTime(2020),
                       lastDate: DateTime(2100),
                     );
-                    if (picked != null) incomeC.selectedDate.value = picked;
+                    if (picked != null) controller.selectedDate.value = picked;
                   },
                   child: _buildInputContainer(
                     child: Row(
@@ -336,7 +334,7 @@ class IncomeView extends GetView<IncomeController> {
                         Text(
                           DateFormat(
                             'dd/MM/yyyy',
-                          ).format(incomeC.selectedDate.value),
+                          ).format(controller.selectedDate.value),
                           style: const TextStyle(color: Colors.white),
                         ),
                         const Icon(
@@ -359,7 +357,7 @@ class IncomeView extends GetView<IncomeController> {
               ),
               const SizedBox(height: 8),
               TextField(
-                controller: incomeC.descC,
+                controller: controller.descC,
                 maxLines: 3,
                 style: const TextStyle(color: Colors.white),
                 decoration: _inputDecoration("Contoh: Gaji Bulanan"),
@@ -381,9 +379,9 @@ class IncomeView extends GetView<IncomeController> {
                       isDense: false,
 
                       dropdownColor: primary,
-                      value: incomeC.selectedCategoryId.value.isEmpty
+                      value: controller.selectedCategoryId.value.isEmpty
                           ? null
-                          : incomeC.selectedCategoryId.value,
+                          : controller.selectedCategoryId.value,
                       hint: const Text(
                         "Pilih Kategori",
                         style: TextStyle(color: Colors.white24),
@@ -393,7 +391,7 @@ class IncomeView extends GetView<IncomeController> {
                         Icons.keyboard_arrow_down,
                         color: Colors.white,
                       ),
-                      items: incomeC.categories.map((cat) {
+                      items: controller.categories.map((cat) {
                         return DropdownMenuItem(
                           value: cat.id,
                           child: Text(
@@ -403,7 +401,7 @@ class IncomeView extends GetView<IncomeController> {
                         );
                       }).toList(),
                       onChanged: (val) =>
-                          incomeC.selectedCategoryId.value = val!,
+                          controller.selectedCategoryId.value = val!,
                     ),
                   ),
                 ),
@@ -418,7 +416,7 @@ class IncomeView extends GetView<IncomeController> {
               ),
               const SizedBox(height: 8),
               TextField(
-                controller: incomeC.amountC,
+                controller: controller.amountC,
                 keyboardType: TextInputType.number,
                 style: const TextStyle(
                   color: Colors.white,
@@ -434,7 +432,7 @@ class IncomeView extends GetView<IncomeController> {
                 width: double.infinity,
                 height: 55,
                 child: ElevatedButton(
-                  onPressed: () => incomeC.storeIncome(),
+                  onPressed: () => controller.storeExpense(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.greenAccent[700],
                     shape: RoundedRectangleBorder(
@@ -442,7 +440,7 @@ class IncomeView extends GetView<IncomeController> {
                     ),
                   ),
                   child: const Text(
-                    "Simpan Pemasukan",
+                    "Simpan Pengeluaran",
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

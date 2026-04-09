@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hm_tracker/app/controllers/auth_controller.dart';
-import 'package:hm_tracker/app/widget/bottom_navbar.dart';
 import 'package:hm_tracker/constants/color.dart';
 import 'package:hm_tracker/utils/format-rupiah.dart';
 
@@ -21,7 +20,6 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
       backgroundColor: primary,
       body: SafeArea(
         bottom: false,
@@ -76,7 +74,6 @@ class HomeView extends GetView<HomeController> {
           );
         }),
       ),
-      bottomNavigationBar: CustomBottomNavbar(currentIndex: 0),
     );
   }
 
