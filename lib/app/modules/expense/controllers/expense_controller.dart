@@ -5,9 +5,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:hm_tracker/constants/color.dart';
 import 'package:hm_tracker/constants/url.dart';
 import 'package:hm_tracker/models/category_expense_model.dart';
-import 'package:hm_tracker/models/category_income_model.dart';
 import 'package:hm_tracker/models/expense_model.dart';
-import 'package:hm_tracker/models/income_model.dart';
 import 'package:intl/intl.dart';
 
 class ExpenseController extends GetxController {
@@ -31,17 +29,16 @@ class ExpenseController extends GetxController {
   void onInit() {
     super.onInit();
     getExpensesData();
-    getCategoriesIncomeData();
+    getCategoriesExpenseData();
   }
 
-  void getCategoriesIncomeData() async {
+  void getCategoriesExpenseData() async {
     try {
       isLoading.value = true;
       final response = await dio.get('${API_URL}category/expense');
       if (response.statusCode == 200) {
         isLoading.value = false;
         final List<dynamic> data = response.data['data'];
-        print(data);
         // Mapping ke Model CategoryIncome
         categories.assignAll(
           data.map((item) => CategoryExpense.fromJson(item)).toList(),

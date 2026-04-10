@@ -4,15 +4,32 @@ class User {
   String? username;
   String? email;
   String? role;
+  DateTime? createdAt;
+  DateTime? updatedAt;
 
-  User({this.id, this.name, this.username, this.email, this.role});
+  User({
+    this.id,
+    this.name,
+    this.username,
+    this.email,
+    this.role,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],
       name: json['name'],
+      username: json['username'],
       email: json['email'],
       role: json['role'],
+      createdAt: json['CreatedAt'] != null
+          ? DateTime.tryParse(json['CreatedAt'])
+          : null,
+      updatedAt: json['UpdatedAt'] != null
+          ? DateTime.tryParse(json['UpdatedAt'])
+          : null,
     );
   }
 
@@ -23,6 +40,8 @@ class User {
     data['email'] = email;
     data['username'] = username;
     data['role'] = role;
+    data['CreatedAt'] = createdAt!.toIso8601String();
+    data['UpdatedAt'] = updatedAt!.toIso8601String();
     return data;
   }
 

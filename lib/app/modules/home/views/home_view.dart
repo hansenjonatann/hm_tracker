@@ -357,7 +357,7 @@ class HomeView extends GetView<HomeController> {
             FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                amount,
+                controller.isObscured.value ? 'Rp ••••••' : amount,
                 style: GoogleFonts.inter(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

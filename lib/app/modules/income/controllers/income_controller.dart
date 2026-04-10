@@ -39,7 +39,6 @@ class IncomeController extends GetxController {
       if (response.statusCode == 200) {
         isLoading.value = false;
         final List<dynamic> data = response.data['data'];
-        print(data);
         // Mapping ke Model CategoryIncome
         categories.assignAll(
           data.map((item) => CategoryIncome.fromJson(item)).toList(),

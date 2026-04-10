@@ -44,7 +44,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 10),
 
         // 2. Input Field
         TextField(
@@ -53,6 +53,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           keyboardType: widget.type,
           style: GoogleFonts.inter(color: Colors.white, fontSize: 16),
           decoration: InputDecoration(
+            border: OutlineInputBorder(),
             filled: true,
             fillColor: Colors.white.withOpacity(
               0.05,
